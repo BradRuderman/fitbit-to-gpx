@@ -49,10 +49,12 @@ def upload_file():
       </form>
       <div>
       brought to you by <a href="https://twitter.com/chapello" target="_blank">@chapello</a> and <a href="https://twitter.com/bradruderman" target="_blank">@bradruderman</a>
+      <br />
+      send us the file if you get an error
       <div>
       '''
     except:
-      return sys.exc_info()[0]
+      print(sys.exc_info()[0])
 
 
 if __name__ == "__main__":
