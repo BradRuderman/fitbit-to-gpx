@@ -1,4 +1,4 @@
-from flask import Flask, request, Response
+from flask import Flask, request, make_response
 import json
 import gpxpy
 import gpxpy.gpx
@@ -38,9 +38,29 @@ def upload_file():
           pnt.adjust_time(datetime.timedelta(hours=8))
           gpx_segment.points.append(pnt)
 
-        return Response(gpx.to_xml(), mimetype='text/xml')
+        response = make_response(gpx.to_xml())
+        response.headers['Content-Description'] = 'File Transfer'
+        response.headers['Cache-Control'] = 'no-cache'
+        response.headers['Content-Type'] = 'application/octet-stream'
+        response.headers['Content-Disposition'] = 'attachment; filename=fitbit.gpx'
+        return response
+
       return '''
       <!doctype html>
+      <head>
+      </head>
+      <body>
+      <!-- Google Tag Manager -->
+<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-TSXJPC"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TSXJPC');</script>
+<!-- End Google Tag Manager -->
+      <div>
+      you can use this utility to convert your fitbit gps data to gpx. In order to use, you must download the source of the html page with your exercise data on it. somewhere in it, it should have a line (in the head) that starts with "trackpoints". This is part of a json object, that contains your gps data.
       <title>Upload new File</title>
       <h1>Upload new File</h1>
       <form action="" method=post enctype=multipart/form-data>
@@ -52,9 +72,13 @@ def upload_file():
       <br />
       send us the file if you get an error
       <div>
+      </body>
+      </html>
       '''
     except:
-      print(sys.exc_info()[0])
+      print(sys.exc_info())
+      response = make_response(sys.exc_info())
+      return response
 
 
 if __name__ == "__main__":
