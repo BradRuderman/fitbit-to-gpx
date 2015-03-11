@@ -3,7 +3,7 @@ import json
 import gpxpy
 import gpxpy.gpx
 from dateutil.parser import parse
-import datetime,sys
+import datetime,sys,traceback
 app = Flask(__name__)
 
 @app.route('/', methods=['GET', 'POST'])
@@ -11,6 +11,7 @@ def upload_file():
     try:
       if request.method == 'POST':
         body = request.files['file']
+        tzoffset = int(request.form['tzoffset'])
         data = None
         for r in body:
           if "trackpoints" in r:
@@ -35,7 +36,7 @@ def upload_file():
           vertical_acc = p["verticalAccuracy"]
           horizontal_acc = p["horizontalAccuracy"]
           pnt = gpxpy.gpx.GPXTrackPoint(lat, lng, elevation=elevation, time=dt, speed=speed, horizontal_dilution=horizontal_acc, vertical_dilution=vertical_acc)
-          pnt.adjust_time(datetime.timedelta(hours=8))
+          pnt.adjust_time(datetime.timedelta(hours=tzoffset))
           gpx_segment.points.append(pnt)
 
         response = make_response(gpx.to_xml())
@@ -63,10 +64,17 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       you can use this utility to convert your fitbit gps data to gpx. In order to use, you must download the source of the html page with your exercise data on it. somewhere in it, it should have a line (in the head) that starts with "trackpoints". This is part of a json object, that contains your gps data.
       <title>Upload new File</title>
       <h1>Upload new File</h1>
-      <form action="" method=post enctype=multipart/form-data>
-        <p><input type=file name=file>
-           <input type=submit value=Upload>
+      <form action="" method="post" enctype="multipart/form-data">
+        <p>
+          <input type="file" name="file" >
+        </p>
+        <p>
+          tz offset (ex 6 or 7 or -5)
+          <input type="integer" name="tzoffset" >
+        </p>
+        <input type="submit" value="Upload">
       </form>
+      <br />
       <div>
       brought to you by <a href="https://twitter.com/chapello" target="_blank">@chapello</a> and <a href="https://twitter.com/bradruderman" target="_blank">@bradruderman</a>
       <br />
@@ -76,8 +84,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       </html>
       '''
     except:
-      print(sys.exc_info())
-      response = make_response(sys.exc_info())
+      print(traceback.format_exc())
+      response = make_response(traceback.format_exc())
       return response
 
 
