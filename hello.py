@@ -69,7 +69,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           <input type="file" name="file" >
         </p>
         <p>
-          adjustment needed to make recorded time into utc ex. Location where run was (pst=8,pdt=7,est=5)
+          adjustment needed to make recorded time into utc ex. Location where run was (pst=8,pdt=7,est=5, gmt=0, aest=-10)
           <input type="number" name="tzoffset" >
         </p>
         <input type="submit" value="Upload">
