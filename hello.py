@@ -80,6 +80,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       <br />
       send us the file if you get an error
       <div>
+      <div>
+      <script src='//redditjs.com/post.js' data-url='http://www.reddit.com/r/fitbit/comments/30bdnn/export_your_fitbit_surge_gps_data_to_other_apps/'></script>
+      </div>
       </body>
       </html>
       '''
